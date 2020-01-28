@@ -1,8 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PSTI
@@ -205,14 +208,22 @@ namespace PSTI
 
         private bool fechar = false;
         private frmMonitorSecundario frm;
-        private void frmPrincipal_Load(object sender, EventArgs e)
+        private async void frmPrincipal_Load(object sender, EventArgs e)
         {
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             TopMost = true;
 
+            await RecuperaTextos();
 
+            // SegundoMonitor();
 
+            Hide();
+
+            this.timer1.Start();
+        }
+        private void SegundoMonitor()
+        {
             Screen screen = GetSecondaryScreen();
             if (screen != null)
             {
@@ -225,10 +236,40 @@ namespace PSTI
                 frm.Size = new Size(screen.WorkingArea.Width, screen.WorkingArea.Height);
                 frm.Show();
             }
-
-            Hide();
-
-            this.timer1.Start();
+        }
+        private async Task RecuperaTextos()
+        {
+            string descricao, regulamento;
+            using (var data = new Code.Dados())
+            {
+                lblTitulo.Text = await data.Titulo();
+                descricao = await data.Descricao();
+                regulamento = await data.Regulamento();
+            }
+            //fazendo download da descricao
+            await RecuperaTextos(descricao, "descricao.rtf", richTextBoxDescricao);
+           
+            //fazendo download do regulamento
+            await RecuperaTextos(regulamento, "regulamento.rtf", richTextBoxRegulamento);          
+        }
+        private async Task RecuperaTextos(string url, string fileName, RichTextBox rich)
+        {
+            //fazendo download do regulamento
+            using (WebClient cliente = new WebClient())
+            {
+                try
+                {
+                    cliente.UseDefaultCredentials = true;
+                    var uri = new Uri(url);
+                    var path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + @"\" + fileName;
+                    await cliente.DownloadFileTaskAsync(uri, path);
+                    rich.LoadFile(path);
+                }
+                catch (Exception ex)
+                {
+                    string error = ex.Message;
+                }
+            }
         }
         public Screen GetSecondaryScreen()
         {
@@ -278,7 +319,8 @@ namespace PSTI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.frm.timer1.Stop();
+            if (this.frm != null && this.frm.timer1 != null)
+                this.frm.timer1.Stop();
             this.timer1.Stop();
             this.fechar = true;
             this.Close();
@@ -293,6 +335,24 @@ namespace PSTI
         private void frmPrincipal_Deactivate(object sender, EventArgs e)
         {
             this.Activate();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Create an OpenFileDialog to request a file to open.
+            OpenFileDialog openFile1 = new OpenFileDialog();
+
+            // Initialize the OpenFileDialog to look for RTF files.
+            openFile1.DefaultExt = "*.rtf";
+            openFile1.Filter = "RTF Files|*.rtf";
+
+            // Determine whether the user selected a file from the OpenFileDialog.
+            if (openFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+               openFile1.FileName.Length > 0)
+            {
+                // Load the contents of the file into the RichTextBox.
+                richTextBoxRegulamento.LoadFile(openFile1.FileName);
+            }
         }
     }
 }
