@@ -292,7 +292,7 @@ namespace PSTI
 
             await RecuperaTextos();
 
-            // SegundoMonitor();
+            SegundoMonitor();
 
             Hide();
 
