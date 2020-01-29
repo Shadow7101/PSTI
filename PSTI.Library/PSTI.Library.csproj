@@ -47,6 +47,8 @@
     <Compile Include="Application\Criptografia.cs" />
     <Compile Include="Application\Dados.cs" />
     <Compile Include="Application\UsuariosAD.cs" />
+    <Compile Include="Domain\Aceite.cs" />
+    <Compile Include="Domain\Processo.cs" />
     <Compile Include="Domain\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

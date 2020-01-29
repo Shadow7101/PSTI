@@ -5,15 +5,69 @@ namespace PSTI.Library.Application
 {
     public class Dados : IDisposable
     {
-        private readonly string ConnectionString;
+        public string ConnectionString { get; set; }
 
         public Dados()
         {
             var c = new Criptografia();
             //string teste =c.Criptografa("Server=(local);Database=AceiteEletronico;User Id=sa;Password=P@ssw0rd;");
-            string conexaoCriptografada = System.Configuration.ConfigurationManager.AppSettings["PSTI-CON"];            
+            string conexaoCriptografada = System.Configuration.ConfigurationManager.AppSettings["PSTI-CON"];
             this.ConnectionString = c.Decriptografa(conexaoCriptografada);
         }
+        public async Task Aceite(string CPF, int ProcessoId)
+        {
+            string computador = Environment.MachineName;
+            using (var connection = new System.Data.SqlClient.SqlConnection(this.ConnectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.CommandText = "sp_INS_ACEITE";
+                    command.Parameters.AddWithValue("@CPF_USUARIO", CPF);
+                    command.Parameters.AddWithValue("@ID_PROCESSO", ProcessoId);
+                    await connection.OpenAsync();
+                    int r = await command.ExecuteNonQueryAsync();
+                    connection.Close();
+                }
+            }
+        }
+        public async Task Usuario(string CPF, string Nome, string DomainName, string Email, string Ramal)
+        {
+            using (var connection = new System.Data.SqlClient.SqlConnection(this.ConnectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.CommandText = "sp_INS_USUARIO";
+                    command.Parameters.AddWithValue("@CPF_USUARIO", CPF);
+                    command.Parameters.AddWithValue("@NM_USUARIO", Nome);
+                    command.Parameters.AddWithValue("@DM_USUARIO", DomainName);
+                    command.Parameters.AddWithValue("@EMAIL_USUARIO", Email);
+                    command.Parameters.AddWithValue("@RAMAL_USUARIO", Ramal);
+                    await connection.OpenAsync();
+                    int r = await command.ExecuteNonQueryAsync();
+                    connection.Close();
+                }
+            }
+        }
+        public async Task Acesso(string CPF, int ProcessoId)
+        {
+            string computador = Environment.MachineName;
+            using (var connection = new System.Data.SqlClient.SqlConnection(this.ConnectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.CommandText = "sp_INS_LogAcesso";
+                    command.Parameters.AddWithValue("@CPF_USUARIO", CPF);
+                    command.Parameters.AddWithValue("@ID_PROCESSO", ProcessoId);
+                    await connection.OpenAsync();
+                    int r = await command.ExecuteNonQueryAsync();
+                    connection.Close();
+                }
+            }
+        }
+
         public async Task<string> Titulo()
         {
             return await RecuperaDoBanco("PSTI-TITULO");

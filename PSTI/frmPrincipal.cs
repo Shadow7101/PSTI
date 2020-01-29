@@ -1,4 +1,5 @@
 ﻿using PSTI.Library.Application;
+using PSTI.Library.Domain;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -250,6 +251,7 @@ namespace PSTI
             string descricao, regulamento;
             using (var data = new Dados())
             {
+                data.ConnectionString = "Server=(local);Database=RH-FDE;User Id=sa;Password=P@ssw0rd;";
                 lblTitulo.Text = await data.Titulo();
                 descricao = await data.Descricao();
                 regulamento = await data.Regulamento();
@@ -299,9 +301,25 @@ namespace PSTI
             this.timer1.Start();
             var usuario = UsuariosAD.GetUsuario();
 
-
-
+            await RegistraVisita(usuario);
         }
+
+        private async Task RegistraVisita(Usuario u)
+        {
+            try
+            {
+                using (var data = new Dados())
+                {
+                    await data.Usuario(u.CPF, u.Nome, u.NomeDeDominio, u.Email, u.Telefone);
+                    await data.Acesso(u.CPF, 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+        }
+
         private void frmPrincipal_FormClosed(object sender, FormClosedEventArgs e)
         {
             Show();
