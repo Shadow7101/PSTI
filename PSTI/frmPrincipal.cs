@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSTI.Library.Application;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
@@ -247,7 +248,7 @@ namespace PSTI
         private async Task RecuperaTextos()
         {
             string descricao, regulamento;
-            using (var data = new Code.Dados())
+            using (var data = new Dados())
             {
                 lblTitulo.Text = await data.Titulo();
                 descricao = await data.Descricao();
@@ -296,7 +297,7 @@ namespace PSTI
             Hide();
 
             this.timer1.Start();
-            var usuario = Code.UsuariosAD.GetUsuario();
+            var usuario = UsuariosAD.GetUsuario();
 
 
 
