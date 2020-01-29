@@ -9,8 +9,9 @@ namespace PSTI.Code
 
         public Dados()
         {
-            string conexaoCriptografada = System.Configuration.ConfigurationManager.AppSettings["PSTI-CON"];
             var c = new Criptografia();
+            //string teste =c.Criptografa("Server=(local);Database=AceiteEletronico;User Id=sa;Password=P@ssw0rd;");
+            string conexaoCriptografada = System.Configuration.ConfigurationManager.AppSettings["PSTI-CON"];            
             this.ConnectionString = c.Decriptografa(conexaoCriptografada);
         }
         public async Task<string> Titulo()

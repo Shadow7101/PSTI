@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E054A8FE-E2DF-4685-993F-A1D94B2DC745}</ProjectGuid>
+    <ProjectGuid>{BA9CFE2C-C720-4D1A-8527-09F3772E44CC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>PSTI</RootNamespace>
-    <AssemblyName>PSTI</AssemblyName>
+    <RootNamespace>PSTI.Admin</RootNamespace>
+    <AssemblyName>PSTI.Admin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,10 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,26 +45,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\Criptografia.cs" />
-    <Compile Include="Code\Dados.cs" />
-    <Compile Include="Code\UsuariosAD.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmPrincipal.Designer.cs">
       <DependentUpon>frmPrincipal.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMonitorSecundario.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMonitorSecundario.Designer.cs">
-      <DependentUpon>frmMonitorSecundario.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Usuario.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="frmMonitorSecundario.resx">
-      <DependentUpon>frmMonitorSecundario.cs</DependentUpon>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPrincipal.resx">
       <DependentUpon>frmPrincipal.cs</DependentUpon>

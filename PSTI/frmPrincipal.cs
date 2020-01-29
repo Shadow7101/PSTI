@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
@@ -292,11 +291,15 @@ namespace PSTI
 
             await RecuperaTextos();
 
-            SegundoMonitor();
+            //SegundoMonitor();
 
             Hide();
 
             this.timer1.Start();
+            var usuario = Code.UsuariosAD.GetUsuario();
+
+
+
         }
         private void frmPrincipal_FormClosed(object sender, FormClosedEventArgs e)
         {
