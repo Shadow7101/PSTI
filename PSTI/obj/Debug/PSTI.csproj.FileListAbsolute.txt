@@ -7,3 +7,4 @@ C:\prg\PSTI\PSTI\obj\Debug\PSTI.Properties.Resources.resources
 C:\prg\PSTI\PSTI\obj\Debug\PSTI.csproj.GenerateResource.cache
 C:\prg\PSTI\PSTI\obj\Debug\PSTI.exe
 C:\prg\PSTI\PSTI\obj\Debug\PSTI.pdb
+C:\prg\PSTI\PSTI\obj\Debug\PSTI.csprojAssemblyReference.cache
