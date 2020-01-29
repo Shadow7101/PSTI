@@ -12,6 +12,9 @@ namespace PSTI
 {
     public partial class frmPrincipal : Form
     {
+        private bool fechar = false;
+        private frmMonitorSecundario frm;
+
         #region | Desabilitando menu iniciar - teclas de atalho
         [DllImport("user32.dll")]
         private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
@@ -206,21 +209,23 @@ namespace PSTI
         }
         #endregion
 
-        private bool fechar = false;
-        private frmMonitorSecundario frm;
-        private async void frmPrincipal_Load(object sender, EventArgs e)
+        #region | Carregando formulário do segundo monitor
+        public Screen GetSecondaryScreen()
         {
-            FormBorderStyle = FormBorderStyle.None;
-            WindowState = FormWindowState.Maximized;
-            TopMost = true;
+            if (Screen.AllScreens.Length == 1)
+            {
+                return null;
+            }
 
-            await RecuperaTextos();
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (screen.Primary == false)
+                {
+                    return screen;
+                }
+            }
 
-            // SegundoMonitor();
-
-            Hide();
-
-            this.timer1.Start();
+            return null;
         }
         private void SegundoMonitor()
         {
@@ -237,6 +242,9 @@ namespace PSTI
                 frm.Show();
             }
         }
+        #endregion
+
+        #region | Recuperação dos textos do formulário
         private async Task RecuperaTextos()
         {
             string descricao, regulamento;
@@ -248,9 +256,9 @@ namespace PSTI
             }
             //fazendo download da descricao
             await RecuperaTextos(descricao, "descricao.rtf", richTextBoxDescricao);
-           
+
             //fazendo download do regulamento
-            await RecuperaTextos(regulamento, "regulamento.rtf", richTextBoxRegulamento);          
+            await RecuperaTextos(regulamento, "regulamento.rtf", richTextBoxRegulamento);
         }
         private async Task RecuperaTextos(string url, string fileName, RichTextBox rich)
         {
@@ -271,32 +279,29 @@ namespace PSTI
                 }
             }
         }
-        public Screen GetSecondaryScreen()
+        #endregion
+
+        #region | Eventos do formulário
+        private async void frmPrincipal_Load(object sender, EventArgs e)
         {
-            if (Screen.AllScreens.Length == 1)
-            {
-                return null;
-            }
+            FormBorderStyle = FormBorderStyle.None;
+            WindowState = FormWindowState.Maximized;
+            TopMost = true;
+            this.panel1.Location = new Point(this.ClientSize.Width / 2 - this.panel1.Size.Width / 2, this.ClientSize.Height / 2 - this.panel1.Size.Height / 2);
+            this.panel1.Anchor = AnchorStyles.None;
 
-            foreach (Screen screen in Screen.AllScreens)
-            {
+            await RecuperaTextos();
 
+            // SegundoMonitor();
 
+            Hide();
 
-                if (screen.Primary == false)
-                {
-                    return screen;
-                }
-            }
-
-            return null;
+            this.timer1.Start();
         }
-
         private void frmPrincipal_FormClosed(object sender, FormClosedEventArgs e)
         {
             Show();
         }
-
         private void frmPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!this.fechar)
@@ -316,7 +321,6 @@ namespace PSTI
                 e.Cancel = true;
             }
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             if (this.frm != null && this.frm.timer1 != null)
@@ -326,17 +330,14 @@ namespace PSTI
             this.Close();
             Application.Exit();
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.BringToFront();
         }
-
         private void frmPrincipal_Deactivate(object sender, EventArgs e)
         {
             this.Activate();
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             // Create an OpenFileDialog to request a file to open.
@@ -354,5 +355,6 @@ namespace PSTI
                 richTextBoxRegulamento.LoadFile(openFile1.FileName);
             }
         }
+        #endregion
     }
 }

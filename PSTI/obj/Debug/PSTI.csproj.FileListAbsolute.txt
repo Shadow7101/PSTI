@@ -1,7 +1,6 @@
 C:\prg\PSTI\PSTI\bin\Debug\PSTI.exe.config
 C:\prg\PSTI\PSTI\bin\Debug\PSTI.exe
 C:\prg\PSTI\PSTI\bin\Debug\PSTI.pdb
-C:\prg\PSTI\PSTI\obj\Debug\PSTI.csprojAssemblyReference.cache
 C:\prg\PSTI\PSTI\obj\Debug\PSTI.frmMonitorSecundario.resources
 C:\prg\PSTI\PSTI\obj\Debug\PSTI.frmPrincipal.resources
 C:\prg\PSTI\PSTI\obj\Debug\PSTI.Properties.Resources.resources
