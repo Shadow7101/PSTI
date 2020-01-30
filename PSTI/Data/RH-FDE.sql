@@ -128,6 +128,25 @@ EXEC sp_INS_Processo_Perfil
 	@DT_FIM = '2020-02-29',
 	@FL_BLOQ = 1
 GO
+
+---------------------------------------------------------------
+----------------------> EXIBE PROCESSO <-----------------------
+---------------------------------------------------------------
+CREATE PROCEDURE sp_SEL_Processo (
+	@ID_PROCESSO INT = 0
+) AS SELECT P1.ID_PROCESSO
+		,P1.NM_PROCESSO
+		,P1.DESC_PROCESSO
+		,P2.END_ARQ_DOC
+		,P2.FL_BLOQ
+		,P3.NM_PERFIL
+FROM Processo AS P1
+INNER JOIN Processo_Perfil AS P2 ON P2.ID_PROCESSO = P1.ID_PROCESSO
+INNER JOIN Perfil AS P3 ON P3.ID_PERFIL = P2.ID_PERFIL
+WHERE (P1.ID_PROCESSO = @ID_PROCESSO) OR
+(@ID_PROCESSO = 0 AND P2.DT_INICIO <= GETDATE() AND P2.DT_FIM >= GETDATE())
+go
+GO
 ------------------------------------------------
 ------------------> Usuario <-------------------
 ------------------------------------------------
@@ -230,6 +249,5 @@ END
 
 GO
 
-select * from Processo
-select * from Perfil
-select * from Processo_Perfil
+
+EXEC SP_SEL_PROCESSO
