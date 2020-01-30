@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSTI.Library.Domain;
+using System;
 using System.Threading.Tasks;
 
 namespace PSTI.Library.Application
@@ -14,6 +15,12 @@ namespace PSTI.Library.Application
             string conexaoCriptografada = System.Configuration.ConfigurationManager.AppSettings["PSTI-CON"];
             this.ConnectionString = c.Decriptografa(conexaoCriptografada);
         }
+
+        public async Task<Processo> Processo()
+        {
+            
+        }
+
         public async Task Aceite(string CPF, int ProcessoId)
         {
             string computador = Environment.MachineName;

@@ -15,6 +15,8 @@ namespace PSTI
     {
         private bool fechar = false;
         private frmMonitorSecundario frm;
+        private Usuario usuario;
+        private Processo processo;
 
         #region | Desabilitando menu iniciar - teclas de atalho
         [DllImport("user32.dll")]
@@ -251,6 +253,7 @@ namespace PSTI
             string descricao, regulamento;
             using (var data = new Dados())
             {
+                processo = await data.Processo();
                 data.ConnectionString = "Server=(local);Database=RH-FDE;User Id=sa;Password=P@ssw0rd;";
                 lblTitulo.Text = await data.Titulo();
                 descricao = await data.Descricao();
@@ -283,41 +286,47 @@ namespace PSTI
         }
         #endregion
 
-        #region | Eventos do formulário
-        private async void frmPrincipal_Load(object sender, EventArgs e)
-        {
-            FormBorderStyle = FormBorderStyle.None;
-            WindowState = FormWindowState.Maximized;
-            TopMost = true;
-            this.panel1.Location = new Point(this.ClientSize.Width / 2 - this.panel1.Size.Width / 2, this.ClientSize.Height / 2 - this.panel1.Size.Height / 2);
-            this.panel1.Anchor = AnchorStyles.None;
-
-            await RecuperaTextos();
-
-            //SegundoMonitor();
-
-            Hide();
-
-            this.timer1.Start();
-            var usuario = UsuariosAD.GetUsuario();
-
-            await RegistraVisita(usuario);
-        }
-
-        private async Task RegistraVisita(Usuario u)
+        #region | Registra visita
+        private async Task RegistraVisita()
         {
             try
             {
                 using (var data = new Dados())
                 {
-                    await data.Usuario(u.CPF, u.Nome, u.NomeDeDominio, u.Email, u.Telefone);
-                    await data.Acesso(u.CPF, 0);
+                    await data.Usuario(usuario.CPF, usuario.Nome, usuario.NomeDeDominio, usuario.Email, usuario.Telefone);
+                    await data.Acesso(usuario.CPF, processo.Id);
                 }
             }
             catch (Exception ex)
             {
                 string error = ex.Message;
             }
+        }
+        #endregion
+
+        #region | Eventos do formulário
+        private void ConfiguraFormulario()
+        {
+            FormBorderStyle = FormBorderStyle.None;
+            WindowState = FormWindowState.Maximized;
+            TopMost = true;
+            this.panel1.Location = new Point(this.ClientSize.Width / 2 - this.panel1.Size.Width / 2, this.ClientSize.Height / 2 - this.panel1.Size.Height / 2);
+            this.panel1.Anchor = AnchorStyles.None;
+            this.timer1.Start();
+        }
+        private async void frmPrincipal_Load(object sender, EventArgs e)
+        {
+            usuario = UsuariosAD.GetUsuario();
+
+            ConfiguraFormulario();
+
+            await RecuperaTextos();
+
+            //SegundoMonitor();
+
+            Hide();
+            
+            await RegistraVisita();
         }
 
         private void frmPrincipal_FormClosed(object sender, FormClosedEventArgs e)
