@@ -1,0 +1,29 @@
+--INSERT INTO Perfil(NM_PERFIL) VALUES ('(Todos)')
+
+
+EXEC sp_sel_Processo @Modulo = 3
+
+/*
+select * from Processo
+select * FROM Perfil
+select * from Processo_Perfil
+
+SELECT		 
+	 P1.ID_PROCESSO
+	,P1.NM_PROCESSO
+	,P1.DESC_PROCESSO
+	,P1.FL_ATIVO
+	,P1.DT_INCLUSAO
+	,P2.END_ARQ_DOC
+	,P2.DT_INICIO
+	,P2.DT_FIM
+	,P2.FL_BLOQ
+	,P3.NM_PERFIL
+FROM Processo AS P1 
+INNER JOIN Processo_Perfil AS P2 ON P2.ID_PROCESSO = P1.ID_PROCESSO
+INNER JOIN Perfil AS P3 ON P3.ID_PERFIL = P3.ID_PERFIL
+WHERE P2.DT_INICIO <= GETDATE() AND P2.DT_FIM >= GETDATE() AND P1.FL_ATIVO = 1
+RETURN 0
+
+
+*/

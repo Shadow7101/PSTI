@@ -16,9 +16,41 @@ namespace PSTI.Library.Application
             this.ConnectionString = c.Decriptografa(conexaoCriptografada);
         }
 
-        public async Task<Processo> Processo()
+        public async Task<Processo> Processo(int Modulo, int Id = 0)
         {
-            return null;
+
+            Processo processo = null;
+            using (var connection = new System.Data.SqlClient.SqlConnection(this.ConnectionString))
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.CommandText = "sp_sel_Processo";
+                    command.Parameters.AddWithValue("@ID_PROCESSO", Id);
+                    command.Parameters.AddWithValue("@MODULO", Modulo);
+                    await connection.OpenAsync();
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            processo = new Processo();
+                            processo.Id = !reader.IsDBNull(0) ? reader.GetInt32(0) : processo.Id;
+                            processo.Nome = !reader.IsDBNull(1) ? reader.GetString(0) : processo.Nome;
+                            processo.Descricao = !reader.IsDBNull(2) ? reader.GetString(2) : processo.Descricao;
+                            processo.Ativo = !reader.IsDBNull(3) ? reader.GetBoolean(3) : processo.Ativo;
+                            processo.Data = !reader.IsDBNull(4) ? reader.GetDateTime(4) : processo.Data;
+                            processo.Regulamento = !reader.IsDBNull(5) ? reader.GetString(5) : processo.Regulamento;
+                            processo.DataInicio = !reader.IsDBNull(6) ? reader.GetDateTime(6) : processo.DataInicio;
+                            processo.DataTermino = !reader.IsDBNull(7) ? reader.GetDateTime(7) : processo.DataTermino;
+                            processo.BloquearEstacao = !reader.IsDBNull(8) ? reader.GetBoolean(8) : processo.BloquearEstacao;
+                            processo.Perfil = !reader.IsDBNull(9) ? reader.GetString(9) : processo.Perfil;
+                        }
+                        reader.Close();
+                        connection.Close();
+                        return processo;
+                    }
+                }
+            }
         }
 
         public async Task Aceite(string CPF, int ProcessoId)

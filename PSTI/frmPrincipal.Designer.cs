@@ -120,6 +120,8 @@
             // 
             // richTextBoxRegulamento
             // 
+            this.richTextBoxRegulamento.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBoxRegulamento.Location = new System.Drawing.Point(17, 119);
             this.richTextBoxRegulamento.Name = "richTextBoxRegulamento";
             this.richTextBoxRegulamento.ReadOnly = true;
